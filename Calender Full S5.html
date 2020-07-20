@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calender S5</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        *::selection{
+            display: none;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f9f9f9;  /* #352b48 */
+            font-family: 'Poppins', sans-serif;
+        }
+        .calender{
+            width: 320px;
+            height: auto;
+            background: #fff;
+            box-sizing: border-box;
+            border-radius: 16px;
+            box-shadow: 0 5px 10px rgba(0,0,0,.6);
+        }
+        .calender .img{
+            width: 100%;
+            height: 210px;
+            background-size: cover;
+            box-sizing: border-box;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 24px 8px 24px 16px;
+        }
+        .calender .img .time{
+            width: 60%;
+            height: 80px;
+            text-align: center;
+            border-radius: 12px;
+        }
+        .calender .img h2,
+        .calender .img h3{
+            color: #fff;
+            background:#0006;
+            text-shadow: 0 2px 2px rgba(0,0,0,.2);
+        }
+        .calender .img h2{
+            font-weight: 500;
+        }
+        .calender .img h3{
+            font-weight: 400;
+        }
+        .prev, .next{
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            position: relative;
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            margin-top: 120px;
+            padding-top: 4px;
+            padding-right: 2px;
+            font-size: 32px;
+            font-weight: 400;
+            transition: all 0.4s;
+        }
+        .prev:hover,
+        .next:hover {
+            border-radius: 50%;
+            background: #009688;
+        }
+        .calender .date, .calender .week{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            box-sizing: border-box;
+            grid-gap: 2px 2px;
+            background: #f9f9f9;/*#c5e6f3; */
+            border-radius: 0 0 12px 12px;
+        }
+        .week{
+            padding: 12px 10px 3px 10px;
+        }
+        .date{
+            padding: 3px 10px 16px 10px;
+        }
+        .calender .date div, .calender .week div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 42px;
+            width: 42px;
+            color: #262626;
+            transition: all .4s;
+        }
+        .calender .week div.day{
+            font-size: 18px;
+            font-weight: 560;
+        } 
+        .calender .week div.day:first-child,
+        .calender .date div.number:nth-child(7n + 1){
+            color: #ff685d;
+            font-weight: 600;
+        }
+        .calender .date div.number.active,
+        .calender .date div.number:hover{
+            background: #009688;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 50%;
+        }  
+        .calender .date div.number.disable{
+            color: #999;
+            font-weight: 500;
+        }  
+        .calender .date div.number.disable:hover{
+            background: #f9f9f9;
+            border-radius: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body onload="RenderDate()">
+    <div class="calender">
+        <div class="img" id="myI">
+            <div class="time">
+                <h2 id="date">15, Thursday</h2>
+                <h3 id="month">November | 2020</h3>
+            </div>
+            <div class="prev" onclick="moveDate('prev')" onkeypress="document.getElementById('myI').style.backgroundImage = 'url(img/'+ (D.getMonth() - 1) +'.jpg)';">&#10094;</div>
+            <div class="next" onclick="moveDate('next')" onkeypress="document.getElementById('myI').style.backgroundImage = 'url(img/'+ (D.getMonth() + 1) +'.jpg)';">&#10095;</div>
+        </div>
+        <div class="week">
+            <div class="day">Su</div>
+            <div class="day">Mo</div>
+            <div class="day">Tu</div>
+            <div class="day">We</div>
+            <div class="day">Th</div>
+            <div class="day">Fr</div>
+            <div class="day">Sa</div>
+        </div>
+        <div class="date"></div>
+    </div>
+
+    <script>
+        var D = new Date();
+
+        function RenderDate(){
+
+            var W = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+            //var W = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+            var M = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+            var FY = D.getFullYear();
+            var MO = M[D.getMonth()];
+            var DT = D.getDate();
+            var DY = W[D.getDay()];
+            var MI = D.toDateString()
+
+            document.getElementById('date').innerHTML = DT + "," + " " + DY;
+            document.getElementById('month').innerHTML = MO + " | " + FY;
+
+            // img set 
+            var I = ['21','2','3','4','5','6','7','8','19','10','11','17'];
+            document.getElementById('myI').style.backgroundImage = 'url(img/'+ I[D.getMonth()] +'.jpg)';
+            document.getElementById('myI').style.transition = 'all .4s';
+
+
+            // set date
+            D.setDate(1);
+            var Da = D.getDay();
+            var DN = new Date();
+
+            // dynamic month
+            var P = new Date( D.getFullYear(), D.getMonth(), 0).getDate();
+            var C = new Date( D.getFullYear(), D.getMonth() + 1, 0).getDate();
+            var N = 42 - C - Da;
+
+            var cells = "";
+
+            for(p = Da; p > 0; p--){
+                cells += '<div class="number disable">' + (P - p + 1) + '</div>'; 
+            }
+
+            for(c = 1; c <= C; c++){
+
+                if(c == DN.getDate() && D.getMonth() == DN.getMonth()){
+                    cells += '<div class="number active">' + c + '</div>';
+                }else{
+                    cells += '<div class="number">' + c + '</div>';
+                }
+            }
+
+            for(n = N; n > 0; n--){
+                cells += '<div class="number disable">' + (N - n + 1) + '</div>'; 
+            }
+
+            document.getElementsByClassName('date')[0].innerHTML = cells;
+        }
+
+        
+        
+        function moveDate(para) {
+            if(para == 'prev'){
+                D.setMonth(D.getMonth() - 1);  
+                
+            }else if (para == 'next'){
+                D.setMonth(D.getMonth() + 1);
+            }
+            RenderDate();
+        } 
+    </script>
+</body>
+</html>
